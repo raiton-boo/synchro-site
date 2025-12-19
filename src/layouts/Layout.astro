@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Cosmic Synchrony",
+  description = 'タブを開くたびに新しい星が生まれ、見えない糸で繋がっていく。宇宙空間で同期する星々を体験できる3Dインタラクティブサイト。'
+} = Astro.props;
+
+// OG画像とFaviconのURL（Github Pagesように絶対パスで指定）
+const siteUrl = 'https://raiton-boo.github.io/synchro-site';
+const ogImageUrl = `${siteUrl}/og-image.png`;
+const faviconUrl = `${siteUrl}/favicon.png`;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 基本メタ情報 -->
+  <meta name="description" content={description} />
+  <meta name="author" content="Cosmic Synchrony" />
+  <meta name="Keywords" content="3D, WebGL, Three.js, インタラクティブ, 宇宙, 星, マルチタブ, リアルタイム同期" />
+
+  <!-- OGP (Open Graph Protocol) -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={siteUrl} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Cosmic Synchrony" />
+  <meta property="og:locale" content="ja_JP" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+  <meta name="twitter:site" content="@raiton-boo" />
+  <meta name="twitter:creator" content="@raiton-boo" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href={faviconUrl} />
+  <link rel="apple-touch-icon" href={faviconUrl} />
+
+  <!-- セキュリティ -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                  script-src 'self' 'unsafe-inline';
+                  style-src 'self' 'unsafe-inline';
+                  img-src 'self' data:;
+                  connect-src 'self';">
+  <meta http-equiv="Permissions-Policy"
+        content="accelerometer=(), camera=(), microphone=()">
+
+  <!-- テーマカラー（ブラウザのアドレスバーの色） -->
+  <meta name="theme-color" content="#050510" />
+
+  <title>{title}</title>
+</head>
+<body>
+  <slot />
+</body>
+</html>
