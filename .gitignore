@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# docs (要件定義やセキュリティポリシーなどのドキュメント。非公開に設定)
+docs/
