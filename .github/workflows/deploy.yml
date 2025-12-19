@@ -1,0 +1,60 @@
+name: Github Pages Deploy
+
+on:
+  push:
+    branches: [main] # mainブランチにpushした時に実行
+  workflow_dispatch: # 手動実行も可能にする
+
+permissions: # GitHub Pagesにデプロイするために必要な権限
+  contents: read # コードの読み取り
+  pages: write # GitHub Pagesへの書き込み
+  id-token: write # デプロイ認証用のトークン発行
+
+concurrency: # 同時実行を防止
+  group: 'pages'
+  cancel-in-progress: false # 進行中のジョブをキャンセルしない
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Node.jsのセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 依存関係のインストール
+        run: npm ci # package-lock.jsonを元にインストール
+
+      - name: Astroプロジェクトのビルド
+        run: npm run build
+        env:
+          NODE_ENV: production # 本番環境用のビルド
+
+      - name: GitHub Pagesのセットアップ # GitHub Pages用の設定
+        uses: actions/configure-pages@v4
+
+      - name: ビルド成果物のアップロード
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # .gitignoreで除外されているビルド後の出力フォルダを指定
+
+      - name: ビルドとアップロード
+        uses: actions/configure-pages@v3
+
+  deploy:
+    # GitHubリポジトリ設定のPagesと紐付け
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build # buildジョブが成功した時のみ実行
+    steps:
+      - name: GitHub Pagesへデプロイ実行
+        id: deployment
+        uses: actions/deploy-pages@v4
