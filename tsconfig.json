@@ -1,5 +1,19 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@lib/*": ["src/lib/*"],
+      "@core/*": ["src/lib/core/*"],
+      "@sync/*": ["src/lib/sync/*"],
+      "@interaction/*": ["src/lib/interaction/*"],
+      "@audio/*": ["src/lib/audio/*"],
+      "@debug/*": ["src/lib/debug/*"],
+      "@utils/*": ["src/lib/utils/*"],
+      "@types/*": ["src/lib/types/*"]
+    }
+  }
 }
