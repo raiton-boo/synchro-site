@@ -16,7 +16,7 @@ export default defineConfig({
         '@audio': '/src/lib/audio',
         '@debug': '/src/lib/debug',
         '@utils': '/src/lib/utils',
-        '@types': '/src/lib/types',
+        '@customTypes': '/src/lib/types',
       },
     },
   },
