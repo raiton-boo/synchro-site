@@ -17,7 +17,9 @@ export default defineConfig({
         '@debug': '/src/lib/debug',
         '@utils': '/src/lib/utils',
         '@customTypes': '/src/lib/types',
+        '@shaders': '/src/lib/core/shaders',
       },
     },
+    assetsInclude: ['**/*.glsl'],
   },
 });

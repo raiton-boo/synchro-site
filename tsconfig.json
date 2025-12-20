@@ -13,7 +13,8 @@
       "@audio/*": ["src/lib/audio/*"],
       "@debug/*": ["src/lib/debug/*"],
       "@utils/*": ["src/lib/utils/*"],
-      "@customTypes/*": ["src/lib/types/*"]
+      "@customTypes/*": ["src/lib/types/*"],
+      "@shaders/*": ["src/lib/core/shaders/*"]
     }
   }
 }
