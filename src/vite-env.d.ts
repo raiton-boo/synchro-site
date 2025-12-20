@@ -10,13 +10,3 @@ declare module '*.glsl' {
   const content: string;
   export default content;
 }
-
-/**
- * GLSL ファイルの型定義（?raw 付き）
- *
- * 明示的に raw として読み込む場合
- */
-declare module '*.glsl?raw' {
-  const content: string;
-  export default content;
-}

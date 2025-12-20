@@ -1,22 +1,22 @@
 /**
  * Classic Perlin Noise (3D)
- *
+ * 
  * より滑らかで連続的な模様を生成
  * ガス惑星の大きな流れや帯状模様の表現に使用
- *
+ * 
  * 出典: Stefan Gustavson
- *
+ * 
  * @param P - 3次元座標
  * @return ノイズ値（-1.0 ~ 1.0 の範囲に正規化）
  */
 
-// 疑似ランダム順列（289 で mod）
-vec4 permute(vec4 x) {
+// 疑似ランダム順列（289 で mod）- Perlin 用にリネーム
+vec4 permutePerlin(vec4 x) {
   return mod(((x*34.0)+1.0)*x, 289.0);
 }
 
-// Taylor 級数による平方根の逆数近似
-vec4 taylorInvSqrt(vec4 r) {
+// Taylor 級数による平方根の逆数近似 - Perlin 用にリネーム
+vec4 taylorInvSqrtPerlin(vec4 r) {
   return 1.79284291400159 - 0.85373472095314 * r;
 }
 
@@ -27,7 +27,7 @@ vec3 fade(vec3 t) {
 
 /**
  * Classic Perlin Noise のメイン関数
- *
+ * 
  * @param P - 3次元座標（スケールを調整して呼び出す）
  * @return ノイズ値（-1.0 ~ 1.0）
  */
@@ -39,17 +39,17 @@ float cnoise(vec3 P) {
   Pi1 = mod(Pi1, 289.0);
   vec3 Pf0 = fract(P);
   vec3 Pf1 = Pf0 - vec3(1.0);
-
+  
   // 格子点のインデックス
   vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
   vec4 iy = vec4(Pi0.yy, Pi1.yy);
   vec4 iz0 = Pi0.zzzz;
   vec4 iz1 = Pi1.zzzz;
 
-  // ハッシュ計算
-  vec4 ixy = permute(permute(ix) + iy);
-  vec4 ixy0 = permute(ixy + iz0);
-  vec4 ixy1 = permute(ixy + iz1);
+  // ハッシュ計算 - リネームした関数を使用
+  vec4 ixy = permutePerlin(permutePerlin(ix) + iy);
+  vec4 ixy0 = permutePerlin(ixy + iz0);
+  vec4 ixy1 = permutePerlin(ixy + iz1);
 
   // グラデーションベクトルの計算（Z=0 の面）
   vec4 gx0 = ixy0 / 7.0;
@@ -79,13 +79,13 @@ float cnoise(vec3 P) {
   vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
   vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
 
-  // グラデーションの正規化
-  vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+  // グラデーションの正規化 - リネームした関数を使用
+  vec4 norm0 = taylorInvSqrtPerlin(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
   g000 *= norm0.x;
   g010 *= norm0.y;
   g100 *= norm0.z;
   g110 *= norm0.w;
-  vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+  vec4 norm1 = taylorInvSqrtPerlin(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
   g001 *= norm1.x;
   g011 *= norm1.y;
   g101 *= norm1.z;
@@ -105,8 +105,8 @@ float cnoise(vec3 P) {
   vec3 fade_xyz = fade(Pf0);
   vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
   vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
-  float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
-
+  float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+  
   // スケーリングして返す
   return 2.2 * n_xyz;
 }

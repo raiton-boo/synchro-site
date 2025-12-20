@@ -3,4 +3,86 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
+  <canvas id="webgl-canvas"></canvas>
 </Layout>
+
+<style>
+  #webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import { GasPlanet } from '@core/gasPlanet';
+  import type { GasPlanetData } from '@customTypes/index';
+  import { STAR_COLORS, CAMERA_CONFIG } from '@utils/constants';
+
+  // Canvas 要素を取得
+  const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
+
+  // レンダラーの作成
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+  });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // シーンの作成
+  const scene = new THREE.Scene();
+
+  // カメラの作成
+  const camera = new THREE.PerspectiveCamera(
+    CAMERA_CONFIG.FOV,
+    window.innerWidth / window.innerHeight,
+    CAMERA_CONFIG.NEAR,
+    CAMERA_CONFIG.FAR
+  );
+  camera.position.z = CAMERA_CONFIG.INITIAL_POSITION_Z;
+
+  // ガス惑星のデータ（テスト用）
+  const planetData: GasPlanetData = {
+    id: 'test-planet',
+    color: STAR_COLORS[0], // ピンク
+    createdAt: Date.now(),
+    position: { x: 0, y: 0, z: 0 },
+    state: 'birth', // 誕生アニメーションを確認
+  };
+
+  // ガス惑星を作成
+  const planet = new GasPlanet(planetData, scene);
+
+  // アニメーションループ
+  let lastTime = performance.now();
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Delta time を計算
+    const currentTime = performance.now();
+    const deltaTime = (currentTime - lastTime) / 1000; // 秒に変換
+    lastTime = currentTime;
+
+    // ガス惑星を更新
+    planet.update(deltaTime, camera);
+
+    // レンダリング
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // ウィンドウリサイズ対応
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>

@@ -1,6 +1,32 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+/**
+ * GLSL ファイルを文字列として読み込むカスタムプラグイン
+ * @returns {import('vite').Plugin}
+ */
+function glslLoader() {
+  return {
+    name: 'glsl-loader',
+    /**
+     * @param {string} code - ファイルの内容
+     * @param {string} id - ファイルのパス
+     */
+    transform(code, id) {
+      // .glsl ファイルを検知
+      if (id.endsWith('.glsl')) {
+        // GLSL ファイルを文字列としてエクスポート
+        return {
+          code: `export default ${JSON.stringify(code)}`,
+          map: null,
+        };
+      }
+      // それ以外はそのまま返す
+      return null;
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://raiton-boo.github.io',
@@ -20,6 +46,7 @@ export default defineConfig({
         '@shaders': '/src/lib/core/shaders',
       },
     },
-    assetsInclude: ['**/*.glsl'],
+    // @ts-ignore - Vite バージョンの不一致による型エラーを無視
+    plugins: [glslLoader()],
   },
 });
