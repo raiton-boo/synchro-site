@@ -25,14 +25,15 @@ export interface GasPlanetData {
  * ガス惑星の Shader Uniforms
  */
 export interface GasPlanetUniforms {
-  uTime: { value: number };
-  uColor: { value: THREE.Color };
+  uTime: THREE.IUniform<number>;
+  uColor: THREE.IUniform<THREE.Color>;
   uDensity: { value: number };
   uRadius: { value: number };
   uCameraPosition: { value: THREE.Vector3 };
   uRaymarchSteps: { value: number };
   uNoiseScale: { value: number };
   uNoiseSpeed: { value: number };
+  [uniform: string]: THREE.IUniform<any>;
 }
 
 /**
