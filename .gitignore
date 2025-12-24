@@ -24,7 +24,7 @@ pnpm-debug.log*
 .idea/
 
 # vscode setting folder
-.vscode/
+/.vscode/
 
 # docs (要件定義やセキュリティポリシーなどのドキュメント。非公開に設定)
 docs/
